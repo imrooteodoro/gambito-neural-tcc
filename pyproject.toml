@@ -1,0 +1,10 @@
+[project]
+name = "gambito-neural-tcc"
+version = "0.1.0"
+description = "Chess Web APP based in Genai"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.121.0",
+    "flet[web]>=0.28.3",
+]
