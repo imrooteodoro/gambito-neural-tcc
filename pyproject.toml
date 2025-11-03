@@ -6,5 +6,5 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.121.0",
-    "flet[web]>=0.28.3",
+    "flet[all,web]>=0.28.3",
 ]
