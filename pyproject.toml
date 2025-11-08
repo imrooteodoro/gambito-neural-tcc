@@ -6,5 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.121.0",
-    "flet[all,web]>=0.28.3",
+    "google-genai>=1.49.0",
+    "langchain>=1.0.5",
+    "langchain-chroma>=1.0.0",
+    "langchain-community>=0.4.1",
+    "langchain-google-genai>=3.0.1",
+    "python-dotenv>=1.2.1",
+    "sqlalchemy>=2.0.44",
 ]
