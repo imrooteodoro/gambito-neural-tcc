@@ -1,7 +1,14 @@
-.PHONY: run-backend
+.PHONY: run docker-build docker-up docker-down docker-run
 
-run-backend:
-	@uv run fastapi run backend/src/main.py
+IMAGE_NAME = gambito-neural-tcc-backend
 
-frontend-run: 
-	@uv run flet -w frontend/src/main.py
+run:
+	@uv run fastapi dev backend/src/main.py --reload
+docker-build:
+	docker build -t $(IMAGE_NAME) .
+docker-run:
+	docker run -p 8000:8000 $(IMAGE_NAME)
+docker-up:
+	@docker-compose up
+docker-down:
+	@docker-compose down
