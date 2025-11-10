@@ -9,6 +9,8 @@ docker-build:
 docker-run:
 	docker run -p 8000:8000 $(IMAGE_NAME)
 docker-up:
-	@docker-compose up
+	@docker compose up
+docker-compose-build:
+	@docker compose build --no-cache
 docker-down:
-	@docker-compose down
+	@docker compose down -v
