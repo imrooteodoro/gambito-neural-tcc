@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock* ./
 
+RUN apt-get update && apt-get install -y stockfish && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir uv
 
 COPY  . .
