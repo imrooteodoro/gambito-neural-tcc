@@ -1,5 +1,8 @@
 from fastapi import FastAPI, status
 from src.routes.genai_routes import router as genai_router
+from src.routes.send_moves import router as send_moves_router
+from src.core.chess_engine import ChessEngineLogic
+# from src.db.db_connection import *
 
 app = FastAPI(
     title="Chess Application API",
@@ -7,7 +10,7 @@ app = FastAPI(
     version="1.0.0",
     contact={
         "name": "Neural Gambit",
-        "email": 'imrooteodoro.ai.dev@gmail.com' }  
+        "email": 'imrooteodoro.ai.dev@gmail.com'}  
 )
 
 
@@ -16,3 +19,4 @@ async def health_route() -> dict:
     return {"status": "Chess app is running"}
 
 app.include_router(genai_router, prefix="/genai", tags=["GenAI"])
+app.include_router(send_moves_router, prefix="/moves", tags=["Moves"])
