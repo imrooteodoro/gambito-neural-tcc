@@ -8,21 +8,21 @@ import {
   LayoutDashboard, 
   Settings, 
   User, 
-  Bot, // Bot e Send não são mais necessários aqui
-  Send, 
-  Bell 
+  Bell,
+  BarChart3
 } from 'lucide-react';
 
+// 1. IMPORTAÇÕES ATUALIZADAS (camelCase)
 import ProfilePage from './profilePage'; 
-
-// 1. IMPORTE O NOVO COMPONENTE DE CHAT
 import ChatSidebar from './chatSidebar'; 
+import StatisticsPage from './statisticsPage'; 
+import SettingsPage from './settingsPage'; // <-- NOVO COMPONENTE IMPORTADO
 
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeView, setActiveView] = useState<'dashboard' | 'profile' | 'settings'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'profile' | 'settings' | 'statistics'>('dashboard');
 
-  // Componente de helper para o Tabuleiro (sem alteração)
+  // ... (código do ChessboardView) ...
   const ChessboardView = () => (
     <>
       <p className="text-slate-400 pt-6 text-center text-sm">
@@ -58,6 +58,7 @@ export default function DashboardPage() {
           {activeView === 'dashboard' && 'Análise de Partida'}
           {activeView === 'profile' && 'Meu Perfil'}
           {activeView === 'settings' && 'Configurações'}
+          {activeView === 'statistics' && 'Minhas Estatísticas'}
         </h1>
         <div className="flex items-center gap-4">
           <button className="text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-700">
@@ -69,7 +70,6 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* --- Corpo Principal (Layout das Colunas) --- */}
       <div className="flex flex-1 overflow-hidden">
         
         {/* --- Sidebar da Esquerda (sem alterações) --- */}
@@ -80,8 +80,8 @@ export default function DashboardPage() {
             ${sidebarOpen ? 'w-64' : 'w-20'}
           `}
         >
-          {/* ... (código da sidebar esquerda) ... */}
-           <nav className="flex-1 p-4 space-y-2 mt-4">
+          {/* ... (código dos botões do menu) ... */}
+          <nav className="flex-1 p-4 space-y-2 mt-4">
             <button
               onClick={() => setActiveView('dashboard')}
               className={`flex items-center gap-3 p-3 rounded-lg w-full ${activeView === 'dashboard' ? 'bg-purple-700 text-white font-semibold' : 'hover:bg-slate-700'}`}
@@ -97,6 +97,13 @@ export default function DashboardPage() {
               {sidebarOpen && <span>Perfil</span>}
             </button>
             <button
+              onClick={() => setActiveView('statistics')}
+              className={`flex items-center gap-3 p-3 rounded-lg w-full ${activeView === 'statistics' ? 'bg-purple-700 text-white font-semibold' : 'hover:bg-slate-700'}`}
+            >
+              <BarChart3 size={20} />
+              {sidebarOpen && <span>Estatísticas</span>}
+            </button>
+            <button
               onClick={() => setActiveView('settings')}
               className={`flex items-center gap-3 p-3 rounded-lg w-full ${activeView === 'settings' ? 'bg-purple-700 text-white font-semibold' : 'hover:bg-slate-700'}`}
             >
@@ -104,7 +111,9 @@ export default function DashboardPage() {
               {sidebarOpen && <span>Configurações</span>}
             </button>
           </nav>
-          <div className="p-4 border-t border-slate-700">
+
+          {/* ... (código do footer da sidebar) ... */}
+           <div className="p-4 border-t border-slate-700">
             <div className={`flex items-center gap-3 ${!sidebarOpen && 'justify-center'}`}>
               <img src="https://via.placeholder.com/40" alt="Avatar" className="w-10 h-10 rounded-full" />
               {sidebarOpen && (
@@ -117,26 +126,20 @@ export default function DashboardPage() {
           </div>
         </aside>
 
-        {/* --- Conteúdo Central (com lógica de renderização) --- */}
+        {/* --- Conteúdo Central --- */}
         <main className="flex-1 flex flex-col overflow-hidden bg-slate-950">
           
+          {/* 2. RENDERIZAÇÃO ATUALIZADA */}
           {activeView === 'dashboard' && <ChessboardView />}
           {activeView === 'profile' && <ProfilePage />}
+          {activeView === 'statistics' && <StatisticsPage />}
           
-          {activeView === 'settings' && (
-            <div className="p-8">
-              <h1 className="text-3xl font-bold text-white">Configurações</h1>
-              <p className="text-slate-400 mt-4">Página de configurações em construção...</p>
-            </div>
-          )}
+          {/* TRECHO SUBSTITUÍDO: O placeholder foi removido */}
+          {activeView === 'settings' && <SettingsPage />}
 
         </main>
 
-        {/* 2. RENDERIZE O CHATBAR CONDICIONALMENTE
-          
-          Esta é a mágica! Este componente só será
-          renderizado se 'activeView' for 'dashboard'.
-        */}
+        {/* --- Sidebar da Direita (Chat) --- */}
         {activeView === 'dashboard' && <ChatSidebar />}
 
       </div>

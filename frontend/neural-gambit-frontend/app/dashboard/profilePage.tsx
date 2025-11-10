@@ -26,7 +26,7 @@ export default function ProfilePage() {
         <div className="md:col-span-1">
           <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700 flex flex-col items-center">
             <img 
-              src="https://via.placeholder.com/150" 
+              src="https://via.placeholder.com/150"
               alt="Avatar"
               className="w-36 h-36 rounded-full mb-4 border-4 border-purple-500"
             />
