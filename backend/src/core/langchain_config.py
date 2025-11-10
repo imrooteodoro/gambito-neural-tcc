@@ -1,6 +1,12 @@
 from langchain import chat_models
 from dotenv import load_dotenv
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 load_dotenv()
 
@@ -12,6 +18,7 @@ variables = {
 
 for variable in variables:
     if variables[variable] is None:
+        logging.error(f"Environment variable {variable} is not set.")
         raise ValueError(f"Environment variable {variable} is not set.")
 
 chess_agent = chat_models.init_chat_model(
