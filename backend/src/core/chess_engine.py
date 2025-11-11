@@ -15,7 +15,7 @@ class ChessEngineLogic:
     def chess_move(self, fen: str, time_limit: float = 0.1) -> str:
         board = chess.Board(fen)
         info = self.engine.analyse(board, chess.engine.Limit(time=time_limit))
-        print(info)
+        # print(info)
         print(info['pv'][0:3])
         return info['score']
 
