@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/dist/client/link';
 import React, { useState } from 'react';
 
 export default function SignupPage() {
@@ -161,7 +162,7 @@ export default function SignupPage() {
 
         {/* Login Link */}
         <p className="text-center mt-6 text-sm text-gray-600">
-          Já tem uma conta? <span className="text-purple-600 font-semibold hover:underline cursor-pointer">Fazer login</span>
+          Já tem uma conta? <Link href="/login" className="text-purple-600 font-semibold hover:underline cursor-pointer">Fazer login</Link>
         </p>
       </div>
 
