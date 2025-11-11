@@ -1,10 +1,21 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Palette, Languages, Bell, Save, Moon, Sun, Info } from 'lucide-react';
+import React, { useState } from "react";
+import { Palette, Languages, Bell, Save, Moon, Sun, Info } from "lucide-react";
+import { useTheme } from "next-themes";
 
-// Um componente de toggle reutilizável para a UI
-function SettingsToggle({ label, icon: Icon, enabled, onToggle }: { label: string, icon: any, enabled: boolean, onToggle: () => void }) {
+// Componente de toggle reutilizável
+function SettingsToggle({
+  label,
+  icon: Icon,
+  enabled,
+  onToggle,
+}: {
+  label: string;
+  icon: any;
+  enabled: boolean;
+  onToggle: () => void;
+}) {
   return (
     <div className="flex items-center justify-between p-4 bg-slate-700 rounded-lg">
       <div className="flex items-center gap-3">
@@ -15,7 +26,7 @@ function SettingsToggle({ label, icon: Icon, enabled, onToggle }: { label: strin
         onClick={onToggle}
         className={`
           w-12 h-6 rounded-full flex items-center p-1 transition-colors
-          ${enabled ? 'bg-purple-600 justify-end' : 'bg-slate-600 justify-start'}
+          ${enabled ? "bg-purple-600 justify-end" : "bg-slate-600 justify-start"}
         `}
       >
         <div className="w-5 h-5 bg-white rounded-full shadow-md transform transition-transform" />
@@ -25,7 +36,19 @@ function SettingsToggle({ label, icon: Icon, enabled, onToggle }: { label: strin
 }
 
 // Componente de Select
-function SettingsSelect({ label, icon: Icon, value, onChange, children }: { label: string, icon: any, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, children: React.ReactNode }) {
+function SettingsSelect({
+  label,
+  icon: Icon,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  icon: any;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between p-4 bg-slate-700 rounded-lg">
       <div className="flex items-center gap-3">
@@ -44,32 +67,33 @@ function SettingsSelect({ label, icon: Icon, value, onChange, children }: { labe
 }
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState('dark');
-  const [boardColor, setBoardColor] = useState('brown');
-  const [language, setLanguage] = useState('pt-br');
+  // Corrigido: desestruturação correta do useTheme()
+  const { theme, setTheme } = useTheme();
+
+  const [boardColor, setBoardColor] = useState("brown");
+  const [language, setLanguage] = useState("pt-br");
   const [emailNotifications, setEmailNotifications] = useState(true);
 
   const handleSave = () => {
-    // Lógica para salvar as configurações
-    alert('Configurações salvas!');
+    alert("Configurações salvas!");
   };
 
   return (
     <div className="flex-1 overflow-y-auto p-8 bg-slate-950 text-slate-100">
       <h1 className="text-3xl font-bold mb-8 text-white">Configurações</h1>
 
-      {/* Usamos max-w-3xl para a página de config não ficar larga demais */}
       <div className="max-w-3xl mx-auto space-y-8">
-
-        {/* Card: Aparência */}
+        {/* Aparência */}
         <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3"><Palette /> Aparência</h3>
+          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
+            <Palette /> Aparência
+          </h3>
           <div className="space-y-4">
             <SettingsToggle
               label="Tema Escuro"
-              icon={theme === 'dark' ? Moon : Sun}
-              enabled={theme === 'dark'}
-              onToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              icon={theme === "dark" ? Moon : Sun}
+              enabled={theme === "dark"}
+              onToggle={() => setTheme(theme === "dark" ? "light" : "dark")}
             />
             <SettingsSelect
               label="Cor do Tabuleiro"
@@ -85,9 +109,11 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Card: Preferências */}
+        {/* Preferências */}
         <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3"><Languages /> Preferências</h3>
+          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
+            <Languages /> Preferências
+          </h3>
           <div className="space-y-4">
             <SettingsSelect
               label="Idioma"
@@ -101,10 +127,12 @@ export default function SettingsPage() {
             </SettingsSelect>
           </div>
         </div>
-        
-        {/* Card: Notificações */}
+
+        {/* Notificações */}
         <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3"><Bell /> Notificações</h3>
+          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
+            <Bell /> Notificações
+          </h3>
           <div className="space-y-4">
             <SettingsToggle
               label="Notificações por E-mail"
@@ -112,7 +140,7 @@ export default function SettingsPage() {
               enabled={emailNotifications}
               onToggle={() => setEmailNotifications(!emailNotifications)}
             />
-             <SettingsToggle
+            <SettingsToggle
               label="Análises no E-mail"
               icon={Info}
               enabled={false}
@@ -121,7 +149,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Botão de Salvar */}
+        {/* Botão Salvar */}
         <div className="flex justify-end pt-4">
           <button
             onClick={handleSave}
@@ -131,7 +159,6 @@ export default function SettingsPage() {
             Salvar Alterações
           </button>
         </div>
-
       </div>
     </div>
   );

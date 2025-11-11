@@ -13,10 +13,10 @@ import {
 } from 'lucide-react';
 
 // 1. IMPORTAÇÕES ATUALIZADAS (camelCase)
-import ProfilePage from './profilePage'; 
-import ChatSidebar from './chatSidebar'; 
-import StatisticsPage from './statisticsPage'; 
-import SettingsPage from './settingsPage'; // <-- NOVO COMPONENTE IMPORTADO
+import ProfilePage from '../../components/dashboard/profilePage'; 
+import ChatSidebar from '../../components/dashboard/chatSidebar'; 
+import StatisticsPage from '../../components/dashboard/statisticsPage'; 
+import SettingsPage from '../../components/dashboard/settingsPage'; // <-- NOVO COMPONENTE IMPORTADO
 
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
