@@ -1,4 +1,4 @@
-.PHONY: run docker-build docker-up docker-down docker-run
+.PHONY: run docker-build docker-up docker-down docker-run test
 
 IMAGE_NAME = gambito-neural-tcc-backend
 
@@ -14,3 +14,5 @@ docker-compose-build:
 	@docker compose build --no-cache
 docker-down:
 	@docker compose down -v
+test:
+	@pytest .
