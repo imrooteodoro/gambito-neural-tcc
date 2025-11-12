@@ -10,3 +10,30 @@ class Users(Base):
     password = Column(String, nullable=False)
     level = Column(Integer, default=1)
     is_active = Column(Boolean, default=True)
+
+class Studies(Base):
+    __tablename__ = 'studies'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    study_data = Column(String, nullable=False)
+
+class GameHistory(Base):
+    __tablename__ = 'game_history'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    game_data = Column(String, nullable=False)
+
+class Preferences(Base):
+    __tablename__ = 'preferences'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    preference_data = Column(String, nullable=False)
+
+class Statistics(Base):
+    __tablename__ = 'statistics'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    statistics_data = Column(String, nullable=False)
+
+
+Base.metadata.create_all(bind=engine)
