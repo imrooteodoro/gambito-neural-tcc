@@ -1,6 +1,8 @@
 from fastapi import FastAPI, status
 from src.routes.genai_routes import router as genai_router
 from src.routes.send_moves import router as send_moves_router
+from src.routes.user_routes import router as user_router
+from src.routes.account import router as account_routes
 from src.core.chess_engine import ChessEngineLogic
 # from src.db.db_connection import *
 
@@ -20,3 +22,5 @@ async def health_route() -> dict:
 
 app.include_router(genai_router, prefix="/genai", tags=["GenAI"])
 app.include_router(send_moves_router, prefix="/moves", tags=["Moves"])
+app.include_router(user_router, prefix="/api", tags=["Users"])
+app.include_router(account_routes, prefix="/signup", tags=["Signup"])
