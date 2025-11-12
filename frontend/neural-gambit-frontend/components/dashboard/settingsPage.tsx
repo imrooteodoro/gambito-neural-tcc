@@ -2,31 +2,33 @@
 
 import React, { useState } from "react";
 import { Palette, Languages, Bell, Save, Moon, Sun, Info } from "lucide-react";
-import { useTheme } from "next-themes";
 
-// Componente de toggle reutilizável
 function SettingsToggle({
   label,
   icon: Icon,
   enabled,
   onToggle,
+  isDark,
 }: {
   label: string;
   icon: any;
   enabled: boolean;
   onToggle: () => void;
+  isDark: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-slate-700 rounded-lg">
+    <div className={`flex items-center justify-between p-4 rounded-lg transition-colors duration-300 ${
+      isDark ? 'bg-slate-700' : 'bg-slate-100'
+    }`}>
       <div className="flex items-center gap-3">
-        <Icon className="w-5 h-5 text-slate-400" />
+        <Icon className={`w-5 h-5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`} />
         <span className="font-medium">{label}</span>
       </div>
       <button
         onClick={onToggle}
         className={`
           w-12 h-6 rounded-full flex items-center p-1 transition-colors
-          ${enabled ? "bg-purple-600 justify-end" : "bg-slate-600 justify-start"}
+          ${enabled ? "bg-purple-600 justify-end" : isDark ? "bg-slate-600 justify-start" : "bg-slate-300 justify-start"}
         `}
       >
         <div className="w-5 h-5 bg-white rounded-full shadow-md transform transition-transform" />
@@ -42,23 +44,31 @@ function SettingsSelect({
   value,
   onChange,
   children,
+  isDark,
 }: {
   label: string;
   icon: any;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children: React.ReactNode;
+  isDark: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-slate-700 rounded-lg">
+    <div className={`flex items-center justify-between p-4 rounded-lg transition-colors duration-300 ${
+      isDark ? 'bg-slate-700' : 'bg-slate-100'
+    }`}>
       <div className="flex items-center gap-3">
-        <Icon className="w-5 h-5 text-slate-400" />
+        <Icon className={`w-5 h-5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`} />
         <span className="font-medium">{label}</span>
       </div>
       <select
         value={value}
         onChange={onChange}
-        className="px-3 py-1 bg-slate-900 border border-slate-600 rounded-md text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-900/50"
+        className={`px-3 py-1 border rounded-md text-sm outline-none transition-colors duration-300 ${
+          isDark 
+            ? 'bg-slate-900 border-slate-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-900/50' 
+            : 'bg-white border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200'
+        }`}
       >
         {children}
       </select>
@@ -66,10 +76,7 @@ function SettingsSelect({
   );
 }
 
-export default function SettingsPage() {
-  // Corrigido: desestruturação correta do useTheme()
-  const { theme, setTheme } = useTheme();
-
+export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
   const [boardColor, setBoardColor] = useState("brown");
   const [language, setLanguage] = useState("pt-br");
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -79,27 +86,28 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-slate-950 text-slate-100">
-      <h1 className="text-3xl font-bold mb-8 text-white">Configurações</h1>
+    <div className={`flex-1 overflow-y-auto p-8 transition-colors duration-300 ${
+      isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+    }`}>
+      <h1 className={`text-3xl font-bold mb-8 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+        Configurações
+      </h1>
 
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Aparência */}
-        <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+        <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+          isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+        }`}>
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
             <Palette /> Aparência
           </h3>
           <div className="space-y-4">
-            <SettingsToggle
-              label="Tema Escuro"
-              icon={theme === "dark" ? Moon : Sun}
-              enabled={theme === "dark"}
-              onToggle={() => setTheme(theme === "dark" ? "light" : "dark")}
-            />
             <SettingsSelect
               label="Cor do Tabuleiro"
               icon={Palette}
               value={boardColor}
               onChange={(e) => setBoardColor(e.target.value)}
+              isDark={isDark}
             >
               <option value="brown">Padrão (Marrom)</option>
               <option value="green">Verde</option>
@@ -110,7 +118,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Preferências */}
-        <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+        <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+          isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+        }`}>
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
             <Languages /> Preferências
           </h3>
@@ -120,6 +130,7 @@ export default function SettingsPage() {
               icon={Languages}
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
+              isDark={isDark}
             >
               <option value="pt-br">Português (Brasil)</option>
               <option value="en">English</option>
@@ -129,7 +140,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Notificações */}
-        <div className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+        <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+          isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+        }`}>
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
             <Bell /> Notificações
           </h3>
@@ -139,12 +152,14 @@ export default function SettingsPage() {
               icon={Bell}
               enabled={emailNotifications}
               onToggle={() => setEmailNotifications(!emailNotifications)}
+              isDark={isDark}
             />
             <SettingsToggle
               label="Análises no E-mail"
               icon={Info}
               enabled={false}
               onToggle={() => {}}
+              isDark={isDark}
             />
           </div>
         </div>
