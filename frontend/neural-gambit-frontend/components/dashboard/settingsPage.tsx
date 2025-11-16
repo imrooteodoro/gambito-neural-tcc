@@ -95,7 +95,7 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
 
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Aparência */}
-        <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+        {/* <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
           isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
         }`}>
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
@@ -115,10 +115,10 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
               <option value="grey">Cinza</option>
             </SettingsSelect>
           </div>
-        </div>
+        </div> */}
 
         {/* Preferências */}
-        <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+        {/* <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
           isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
         }`}>
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
@@ -137,7 +137,7 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
               <option value="es">Español</option>
             </SettingsSelect>
           </div>
-        </div>
+        </div> */}
 
         {/* Notificações */}
         <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
@@ -154,13 +154,13 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
               onToggle={() => setEmailNotifications(!emailNotifications)}
               isDark={isDark}
             />
-            <SettingsToggle
+            {/* <SettingsToggle
               label="Análises no E-mail"
               icon={Info}
               enabled={false}
               onToggle={() => {}}
               isDark={isDark}
-            />
+            /> */}
           </div>
         </div>
 

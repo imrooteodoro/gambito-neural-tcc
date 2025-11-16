@@ -19,6 +19,10 @@ import {
   MessageSquare
 } from 'lucide-react';
 
+import StatisticsPage from '@/components/dashboard/statisticsPage';
+import ProfilePage from '@/components/dashboard/profilePage';
+import SettingsPage from '@/components/dashboard/settingsPage';
+
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('dashboard');
@@ -816,10 +820,10 @@ export default function DashboardPage() {
         </div>
 
         <h1 className="text-xl font-semibold hidden md:block">
-          {activeView === 'dashboard' && ' Dahsboard de Estudos'}
+          {activeView === 'dashboard' && ' Dashboard de Estudos'}
           {activeView === 'profile' && 'Meu Perfil'}
           {activeView === 'settings' && 'Configurações'}
-          {activeView === 'statistics' && 'Estatísticas'}
+          {activeView === 'statistics' && "Estatísticas"}
         </h1>
 
         <div className="flex items-center gap-4">
@@ -925,9 +929,9 @@ export default function DashboardPage() {
         <main className={`flex-1 flex flex-col overflow-hidden ${isDark ? 'bg-slate-950' : 'bg-slate-50'
           } transition-colors duration-300`}>
           {activeView === 'dashboard' && <ChessboardView />}
-          {activeView === 'profile' && <PlaceholderView title="Perfil" />}
-          {activeView === 'statistics' && <PlaceholderView title="Estatísticas" />}
-          {activeView === 'settings' && <PlaceholderView title="Configurações" />}
+          {activeView === 'profile' && <ProfilePage isDark={isDark}/>}
+          {activeView === 'statistics' && <StatisticsPage isDark={isDark}/>}
+          {activeView === 'settings' && <SettingsPage isDark={isDark}/>}
         </main>
 
       </div>
