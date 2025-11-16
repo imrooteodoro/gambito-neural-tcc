@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
+import Link from 'next/link';
 
 export default function HomePage() {
   const [theme, setTheme] = useState('dark');
@@ -54,15 +55,15 @@ export default function HomePage() {
         
         {/* Links de Navegação */}
         <div className="flex items-center gap-4">
-          <button className={`text-sm font-medium ${
+          <Link href="/login" className={`text-sm font-medium ${
             isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
           } transition-all px-4 py-2 rounded-lg`}>
             Fazer Login
-          </button>
-          
-          <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
+          </Link>
+
+          <Link href="/signup" className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
             Criar Conta
-          </button>
+          </Link>
 
           {/* Toggle de Tema */}
           <button
@@ -112,17 +113,17 @@ export default function HomePage() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-8 rounded-xl font-semibold text-base tracking-wider uppercase hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
+            <Link href="/signup" className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-8 rounded-xl font-semibold text-base tracking-wider uppercase hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
               Começar Agora
-            </button>
-            
-            <button className={`w-full sm:w-auto py-4 px-8 rounded-xl font-semibold text-base backdrop-blur-sm transition-all duration-500 ${
+            </Link>
+
+            <Link href="/features" className={`w-full sm:w-auto py-4 px-8 rounded-xl font-semibold text-base backdrop-blur-sm transition-all duration-500 ${
               isDark
                 ? 'bg-slate-700 bg-opacity-50 text-white border border-slate-600 hover:bg-slate-600'
                 : 'bg-white bg-opacity-70 text-slate-900 border border-slate-300 hover:bg-slate-100'
             }`}>
               Saber Mais
-            </button>
+            </Link>
           </div>
         </div>
       </main>

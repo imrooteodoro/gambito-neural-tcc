@@ -141,20 +141,6 @@ export default function DashboardPage() {
             </button>
             
             <button
-              onClick={() => setActiveView('profile')}
-              className={`flex items-center gap-3 p-3 rounded-lg w-full transition-all duration-200 ${
-                activeView === 'profile' 
-                  ? 'bg-purple-600 text-white font-semibold shadow-lg' 
-                  : isDark 
-                    ? 'hover:bg-slate-700 text-slate-300' 
-                    : 'hover:bg-slate-100 text-slate-700'
-              }`}
-            >
-              <User size={20} />
-              {sidebarOpen && <span>Perfil</span>}
-            </button>
-            
-            <button
               onClick={() => setActiveView('statistics')}
               className={`flex items-center gap-3 p-3 rounded-lg w-full transition-all duration-200 ${
                 activeView === 'statistics' 
@@ -166,6 +152,20 @@ export default function DashboardPage() {
             >
               <BarChart3 size={20} />
               {sidebarOpen && <span>Estatísticas</span>}
+            </button>
+
+            <button
+              onClick={() => setActiveView('profile')}
+              className={`flex items-center gap-3 p-3 rounded-lg w-full transition-all duration-200 ${
+                activeView === 'profile' 
+                  ? 'bg-purple-600 text-white font-semibold shadow-lg' 
+                  : isDark 
+                    ? 'hover:bg-slate-700 text-slate-300' 
+                    : 'hover:bg-slate-100 text-slate-700'
+              }`}
+            >
+              <User size={20} />
+              {sidebarOpen && <span>Perfil</span>}
             </button>
             
             <button
@@ -204,8 +204,8 @@ export default function DashboardPage() {
           isDark ? 'bg-slate-950' : 'bg-slate-50'
         } transition-colors duration-300`}>
           {activeView === 'dashboard' && <ChessboardView />}
-          {activeView === 'profile' && <ProfilePage isDark={isDark} />}
           {activeView === 'statistics' && <StatisticsPage isDark={isDark} />}
+          {activeView === 'profile' && <ProfilePage isDark={isDark} />}
           {activeView === 'settings' && <SettingsPage isDark={isDark} />}
         </main>
 
