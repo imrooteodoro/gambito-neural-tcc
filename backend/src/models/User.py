@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from src.db.db_connection import Base, engine
 
@@ -10,8 +10,10 @@ class Users(Base):
     user_name = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
-    level = Column(Integer, default=1)
-    is_active = Column(Boolean, default=True)
+    level = Column(String, default=1)
+    is_active = Column(Boolean, default=False)
+    activation_token = Column(String, nullable=True)
+    activation_expires_at = Column(DateTime, nullable=True)
 
     studies = relationship("Studies", back_populates="user", cascade="all, delete-orphan")
     games = relationship("GameHistory", back_populates="user", cascade="all, delete-orphan")

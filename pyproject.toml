@@ -13,6 +13,7 @@ dependencies = [
     "langchain-community>=0.4.1",
     "langchain-google-genai>=3.0.1",
     "psycopg2>=2.9.11",
+    "pyjwt>=2.10.1",
     "python-chess>=1.999",
     "python-dotenv>=1.2.1",
     "sqlalchemy>=2.0.44",

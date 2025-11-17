@@ -1,18 +1,17 @@
+from fastapi import APIRouter, Depends
 from src.controllers.user_crud import UserCRUDController
-from fastapi import APIRouter, status
-from src.schemas.user import User
-
+from src.services.auth import AuthService
+from src.repositories.user_repository import UserRepository
+from src.db.db_connection import SessionLocal
 
 router = APIRouter()
 
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=User)
-async def create_user(user: User):
-    controller = UserCRUDController()
-    new_user = controller.create_user(user)
-    return new_user
+auth_service = AuthService(UserRepository(SessionLocal()))
 
-@router.get("/users/{username}", status_code=status.HTTP_200_OK, response_model=User)
-async def get_user_by_username(username: str):
+@router.get("/users/{username}")
+async def get_user_by_username(
+    username: str,
+    current_user = Depends(auth_service.get_current_user) 
+):
     controller = UserCRUDController()
-    user = controller.get_user_by_username(username)
-    return user
+    return controller.get_user_by_username(username)
