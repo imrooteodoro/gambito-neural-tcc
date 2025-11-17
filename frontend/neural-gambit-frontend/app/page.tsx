@@ -56,11 +56,13 @@ export default function HomePage() {
         <div className="flex items-center gap-4">
           <button className={`text-sm font-medium ${
             isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-          } transition-all px-4 py-2 rounded-lg`}>
+          } transition-all px-4 py-2 rounded-lg`}
+          onClick={() => window.location.href = '/login'}>
             Fazer Login
           </button>
           
-          <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
+          <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0"
+          onClick={() => window.location.href = '/signup'}>
             Criar Conta
           </button>
 
@@ -87,10 +89,10 @@ export default function HomePage() {
       <main className="flex-1 flex items-center justify-center text-center p-8 relative z-10">
         <div className="max-w-3xl flex flex-col items-center animate-[slideUp_0.8s_ease-out]">
           
-          {/* Badge */}
+          {/* Badge
           <span className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 shadow-lg">
             ✨ POWERED BY AI
-          </span>
+          </span> */}
 
           {/* Título */}
           <h1 className={`text-5xl md:text-7xl font-extrabold mb-6 text-transparent bg-clip-text transition-all duration-500 ${
@@ -112,7 +114,8 @@ export default function HomePage() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-8 rounded-xl font-semibold text-base tracking-wider uppercase hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0">
+            <button className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-8 rounded-xl font-semibold text-base tracking-wider uppercase hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0"
+            onClick={() => window.location.href = '/signup'}>
               Começar Agora
             </button>
             

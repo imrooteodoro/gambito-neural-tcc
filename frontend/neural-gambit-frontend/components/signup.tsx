@@ -1,10 +1,14 @@
 "use client";
-import Link from 'next/dist/client/link';
+
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 export default function SignupPage() {
+  const router = useRouter();  
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     level: '',
@@ -18,14 +22,41 @@ export default function SignupPage() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.name || !formData.email || !formData.password || !formData.level || !formData.terms) {
-      alert('Por favor, preencha todos os campos e aceite os termos.');
-      return;
+ const handleSubmit = async () => {
+  if (!formData.name || !formData.email || !formData.password || !formData.level || !formData.terms) {
+    alert("Por favor, preencha todos os campos e aceite os termos.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        user_name: formData.username,
+        email: formData.email,
+        password: formData.password,
+        level: formData.level,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao registrar");
     }
-    console.log('Form submitted:', formData);
-    alert('Cadastro realizado com sucesso! 🎉');
-  };
+
+    const result = await response.json();
+    console.log("Usuário registrado:", result);
+
+    // alert("Cadastro realizado com sucesso! 🎉");
+    router.push("/email");
+
+  } catch (error) {
+    console.error(error);
+    }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -42,9 +73,7 @@ export default function SignupPage() {
           <div className="text-6xl mb-3 inline-block animate-[float_3s_ease-in-out_infinite]">♞</div>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Neural Gambit</h1>
           <p className="text-gray-600 text-sm mb-3">Aprenda xadrez com inteligência artificial</p>
-          <span className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-xs font-semibold tracking-wide">
-            ✨ POWERED BY AI
-          </span>
+          
         </div>
 
         <div>
@@ -60,6 +89,22 @@ export default function SignupPage() {
               value={formData.name}
               onChange={handleChange}
               placeholder="Digite seu nome completo"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all outline-none hover:border-gray-300"
+            />
+          </div>
+
+          {/* Username Input */}
+          <div className="mb-5">
+            <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
+              Nome de Usuário
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Escolha um nome de usuário"
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all outline-none hover:border-gray-300"
             />
           </div>
@@ -137,26 +182,6 @@ export default function SignupPage() {
             className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-sm tracking-wider uppercase hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all active:translate-y-0"
           >
             Criar Conta
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="px-4 bg-white text-gray-500">Ou cadastre-se com</span>
-          </div>
-        </div>
-
-        {/* Social Login */}
-        <div className="flex gap-3">
-          <button className="flex-1 py-3 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all font-semibold text-sm text-gray-700">
-            Google
-          </button>
-          <button className="flex-1 py-3 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all font-semibold text-sm text-gray-700">
-            GitHub
           </button>
         </div>
 

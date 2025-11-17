@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from 'react';
-import Link from 'next/link'; // Importe o Link para navegação
+import Link from 'next/link'; 
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
 
@@ -16,14 +16,37 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.email || !formData.password) {
+  const handleSubmit = async () => {
+    if (!formData.username || !formData.password) {
       alert('Por favor, preencha e-mail e senha.');
       return;
     }
-    console.log('Login submitted:', formData);
-    alert('Login realizado com sucesso! 🎉');
-    // Aqui você faria a lógica de login (ex: chamar uma API)
+    
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao fazer login");
+      }
+
+      const result = response.json();
+      console.log("Usuário logado:", result);
+      // alert("Login realizado com sucesso! 🎉");
+      // Redirecionar para a página inicial ou dashboard
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      alert("Erro ao fazer login. Tente novamente.");
+    }
   };
 
   return (
@@ -41,24 +64,22 @@ export default function LoginPage() {
           <div className="text-6xl mb-3 inline-block animate-[float_3s_ease-in-out_infinite]">♞</div>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Neural Gambit</h1>
           <p className="text-gray-600 text-sm mb-3">Aprenda xadrez com inteligência artificial</p>
-          <span className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-xs font-semibold tracking-wide">
-            ✨ POWERED BY AI
-          </span>
+        
         </div>
 
         <div>
           {/* Email Input (Idêntico) */}
           <div className="mb-5">
             <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-              E-mail
+              Nome de usuário
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
-              placeholder="seu@email.com"
+              placeholder="Seu nome de usuário"
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all outline-none hover:border-gray-300"
             />
           </div>
@@ -107,7 +128,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Social Login (Idêntico) */}
+        {/* Social Login (Idêntico)
         <div className="flex gap-3">
           <button className="flex-1 py-3 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all font-semibold text-sm text-gray-700">
             Google
@@ -115,7 +136,7 @@ export default function LoginPage() {
           <button className="flex-1 py-3 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all font-semibold text-sm text-gray-700">
             GitHub
           </button>
-        </div>
+        </div> */}
 
         {/* Signup Link (Link e texto alterados) */}
         <p className="text-center mt-6 text-sm text-gray-600">

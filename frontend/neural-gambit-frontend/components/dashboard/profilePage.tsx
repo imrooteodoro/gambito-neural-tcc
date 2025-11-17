@@ -1,15 +1,56 @@
 "use client";
 
-import React, { useState } from 'react';
-// Ícones para a página
+import React, { useEffect, useState } from 'react';
 import { User, Mail, KeySquare, Upload, Save, Trash2, Shield } from 'lucide-react';
 
 export default function ProfilePage({ isDark = true }: { isDark?: boolean }) {
   const [formData, setFormData] = useState({
-    fullName: 'Seu Nome',
-    username: 'seunome',
-    email: 'seu@email.com',
+    fullName: 'Carregando ...',
+    username: "Carregando ...",
+    email: 'Carregando ...',
+    level:  'Carregando ...',
   });
+
+useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/user');
+        const data = await res.json();
+
+        setFormData({
+          fullName: data.full_name ?? 'Carregando ...',
+          username: data.username ?? 'Carregando ...',
+          email: data.email ?? 'Carregando ...',
+          level: data.level ?? 'Carregando ...',
+        });
+      } catch (err) {
+        console.error("Erro ao carregar usuário:", err);
+      }
+    }
+
+    loadUser();
+  }, []);
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = confirm("Tem certeza que deseja deletar sua conta? Esta ação é irreversível.");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch("/api/delete")
+
+      if (!response.ok) {
+        throw new Error("Erro ao deletar conta");
+      }
+
+      const result = await response.json();
+      console.log("Conta deletada:", result);
+      alert("Conta deletada com sucesso. Você será redirecionado para a página inicial.");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Erro ao deletar conta:", error);
+      alert("Erro ao deletar conta. Tente novamente.");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -128,6 +169,24 @@ export default function ProfilePage({ isDark = true }: { isDark?: boolean }) {
                       : 'bg-slate-100 border-slate-300 text-slate-500'
                   }`}
                 />
+
+                <label htmlFor="le" className={`block text-sm font-semibold mb-2 ${
+                  isDark ? 'text-slate-400' : 'text-slate-700'
+                }`}>
+                  Level
+                </label>
+                <input
+                  type="text"
+                  id="level"
+                  name="level"
+                  value={formData.level}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
+                    isDark 
+                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
+                      : 'bg-white border-slate-300 focus:ring-purple-200'
+                  }`}
+                />
               </div>
               <div className="flex justify-end pt-4">
                 <button
@@ -210,7 +269,7 @@ export default function ProfilePage({ isDark = true }: { isDark?: boolean }) {
               Esta ação é irreversível. Todos os seus dados, partidas e análises serão permanentemente excluídos.
             </p>
             <button className="bg-red-700 hover:bg-red-600 text-white py-3 px-6 rounded-lg font-semibold transition-all flex items-center gap-2">
-              <Trash2 size={18} />
+              <Trash2 size={18} onClick={handleDeleteAccount} />
               Deletar Minha Conta
             </button>
           </div>
