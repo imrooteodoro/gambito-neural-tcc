@@ -40,8 +40,6 @@ export default function LoginPage() {
 
       const result = response.json();
       console.log("Usuário logado:", result);
-      // alert("Login realizado com sucesso! 🎉");
-      // Redirecionar para a página inicial ou dashboard
       window.location.href = "/dashboard";
     } catch (error) {
       console.error("Erro ao fazer login:", error);
