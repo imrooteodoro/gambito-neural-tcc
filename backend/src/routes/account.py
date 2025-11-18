@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from src.schemas.user import UserCreate, LoginRequest, PasswordResetRequest
 from src.services.create_account import CreateAccountService
+from src.models.User import Users
 from src.services.auth import AuthService
 from src.db.db_connection import SessionLocal
 from src.repositories.user_repository import UserRepository
@@ -66,11 +67,14 @@ def password_reset(
 
 auth_service = AuthService(UserRepository(SessionLocal()))
 
-@router.post("delete_account")
+@router.delete("/delete_account")
 async def delete_account(
-    auth_service: AuthService = Depends(get_auth_service),
-    current_user = Depends(auth_service.get_current_user)
+    current_user: Users = Depends(get_auth_service().get_current_user),
+    auth_service: AuthService = Depends(get_auth_service)
 ):
-    user = current_user
-    auth_service.user_repository.delete_user(user)
-    return {"message": "Conta deletada com sucesso."}
+    deleted = auth_service.delete_account(current_user.id)
+
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+
+    return {"message": "Usuário deletado com sucesso."}

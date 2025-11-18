@@ -42,6 +42,10 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(user)
         return user
-    def delete_user(self, user: Users):
+    def delete_user(self, user_id: int):
+        user = self.db.query(Users).filter(Users.id == user_id).first()
+        if not user:
+            return False
         self.db.delete(user)
         self.db.commit()
+        return True

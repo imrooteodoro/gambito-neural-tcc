@@ -168,3 +168,7 @@ class AuthService:
             return None
 
         return self.user_repository.get_user_by_id(int(user_id))
+
+    def delete_account(self, user_id: int) -> bool:
+        return self.user_repository.delete_user(user_id)
+
