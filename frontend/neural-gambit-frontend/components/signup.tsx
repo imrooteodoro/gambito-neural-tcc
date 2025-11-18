@@ -48,7 +48,7 @@ export default function SignupPage() {
     }
 
     const result = await response.json();
-    console.log("Usuário registrado:", result);
+    // console.log("Usuário registrado:", result);
 
     // alert("Cadastro realizado com sucesso! 🎉");
     router.push("/email");
