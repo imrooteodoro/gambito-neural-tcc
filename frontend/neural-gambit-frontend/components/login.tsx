@@ -8,6 +8,8 @@ export default function LoginPage() {
     password: '',
   });
 
+  const [messageError, setMessageError] = useState('');
+
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -42,8 +44,11 @@ export default function LoginPage() {
       console.log("Usuário logado:", result);
       window.location.href = "/dashboard";
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Erro ao fazer login. Tente novamente.");
+      // console.error("Erro ao fazer login:", error);
+      setMessageError("Usuário ou Senha inválidos.");
+      // alert("Erro ao fazer login. Tente novamente.");
+
+
     }
   };
 
@@ -62,7 +67,7 @@ export default function LoginPage() {
           <div className="text-6xl mb-3 inline-block animate-[float_3s_ease-in-out_infinite]">♞</div>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Neural Gambit</h1>
           <p className="text-gray-600 text-sm mb-3">Aprenda xadrez com inteligência artificial</p>
-        
+
         </div>
 
         <div>
@@ -98,14 +103,17 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className='text-center'><span className="text-red-500 mb-4">{messageError}</span></div>
+
           {/* Forgot Password Link (Novo) */}
-          <div className="flex justify-end text-xs text-gray-500 mb-6 -mt-3">
+          <div className="flex justify-end text-xs text-gray-500 mb-6 mt-3">
             <Link href="/forgot-password">
               <span className="text-purple-600 hover:underline cursor-pointer">
                 Esqueceu sua senha?
               </span>
             </Link>
           </div>
+
 
           {/* Submit Button (Texto alterado) */}
           <button
@@ -117,14 +125,14 @@ export default function LoginPage() {
         </div>
 
         {/* Divider (Texto alterado) */}
-        <div className="relative my-6">
+        {/* <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="px-4 bg-white text-gray-500">Ou entre com</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Social Login (Idêntico)
         <div className="flex gap-3">
