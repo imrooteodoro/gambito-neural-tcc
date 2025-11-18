@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    // Agora cookies() é async (Next 15+)
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 

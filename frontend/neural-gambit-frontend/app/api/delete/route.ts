@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../interface";
 
 export async function DELETE() {
   try {
-    const cookieStore = await cookies(); // agora é prometido
+    const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
     if (!token) {
