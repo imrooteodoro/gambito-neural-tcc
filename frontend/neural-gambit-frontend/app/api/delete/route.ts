@@ -1,46 +1,47 @@
 import { NextResponse } from "next/server";
-import { BACKEND_URL } from "../interface";
 import { cookies } from "next/headers";
+import { BACKEND_URL } from "../interface";
 
-export async function POST(req: Request) {
+export async function DELETE() {
   try {
-
-    const cookieStore = await cookies();
+    const cookieStore = await cookies(); // agora é prometido
     const token = cookieStore.get("auth_token")?.value;
-    const body = await req.json();
 
-    const { } = body;
+    if (!token) {
+      return NextResponse.json(
+        { error: "Token não encontrado" },
+        { status: 401 }
+      );
+    }
 
-    const backendRes = await fetch(`${BACKEND_URL}/signup/authdelete_account`, {
-      method: "POST",
+    const backendRes = await fetch(`${BACKEND_URL}/signup/auth/delete_account`, {
+      method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({}),
     });
 
     if (!backendRes.ok) {
-      const errorTxt = await backendRes.text();
-      console.error("Backend erro:", errorTxt);
+      const errText = await backendRes.text();
+      console.error("Erro backend:", errText);
       return NextResponse.json(
-        { error: "Erro do servidor externo", backend: errorTxt },
+        { error: "Erro no backend", backend: errText },
         { status: backendRes.status }
       );
     }
 
-    const result = await backendRes.json();
+    const data = await backendRes.json();
 
     return NextResponse.json(
-      { message: "Conta deletada no backend!", backend: result },
+      { message: "Conta deletada!", backend: data },
       { status: 200 }
     );
 
   } catch (error) {
-    console.error("Erro no Next API:", error);
+    console.error("Erro Next API:", error);
     return NextResponse.json(
       { error: "Erro interno no Next" },
       { status: 500 }
     );
   }
-}   
+}

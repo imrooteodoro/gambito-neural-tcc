@@ -11,7 +11,10 @@ export default function ProfilePage({ isDark = true }: { isDark?: boolean }) {
     level:  'Carregando ...',
   });
 
-useEffect(() => {
+  // ESTADO DE LOADING CORRETO
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
     async function loadUser() {
       try {
         const res = await fetch('/api/user');
@@ -31,24 +34,33 @@ useEffect(() => {
     loadUser();
   }, []);
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = confirm("Tem certeza que deseja deletar sua conta? Esta ação é irreversível.");
-    if (!confirmDelete) return;
+  // FUNÇÃO DELETE FUNCIONANDO
+  async function handleDelete() {
+    if (!confirm("Tem certeza que deseja deletar sua conta?")) return;
+
+    setLoading(true);
 
     try {
-      const response = await fetch("/api/delete")
+      const res = await fetch("/api/delete", {
+        method: "DELETE",
+      });
 
-      if (!response.ok) {
-        throw new Error("Erro ao deletar conta");
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("Erro ao deletar: " + data.error);
+        console.error("Erro:", data);
+        return;
       }
 
-      const result = await response.json();
-      console.log("Conta deletada:", result);
-      alert("Conta deletada com sucesso. Você será redirecionado para a página inicial.");
+      alert("Conta deletada com sucesso!");
       window.location.href = "/";
-    } catch (error) {
-      console.error("Erro ao deletar conta:", error);
-      alert("Erro ao deletar conta. Tente novamente.");
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao deletar conta.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,7 +89,7 @@ useEffect(() => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        {/* Coluna da Esquerda: Avatar */}
+        {/* Coluna da Esquerda */}
         <div className="md:col-span-1">
           <div className={`p-6 rounded-lg shadow-lg border flex flex-col items-center transition-colors duration-300 ${
             isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
@@ -102,10 +114,10 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* Coluna da Direita: Formulários */}
+        {/* Coluna da Direita */}
         <div className="md:col-span-2 space-y-8">
           
-          {/* Card: Informações Pessoais */}
+          {/* Informações Pessoais */}
           <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
             isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
           }`}>
@@ -114,9 +126,7 @@ useEffect(() => {
             </h3>
             <div className="space-y-4">
               <div>
-                <label htmlFor="fullName" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
+                <label htmlFor="fullName" className="block text-sm font-semibold mb-2">
                   Nome Completo
                 </label>
                 <input
@@ -125,17 +135,12 @@ useEffect(() => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
-                      : 'bg-white border-slate-300 focus:ring-purple-200'
-                  }`}
+                  className="w-full px-4 py-3 border-2 rounded-xl outline-none"
                 />
               </div>
+
               <div>
-                <label htmlFor="username" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
+                <label htmlFor="username" className="block text-sm font-semibold mb-2">
                   Nome de Usuário
                 </label>
                 <input
@@ -144,54 +149,33 @@ useEffect(() => {
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
-                      : 'bg-white border-slate-300 focus:ring-purple-200'
-                  }`}
+                  className="w-full px-4 py-3 border-2 rounded-xl outline-none"
                 />
               </div>
+
               <div>
-                <label htmlFor="email" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
-                  E-mail
-                </label>
+                <label className="block text-sm font-semibold mb-2">E-mail</label>
                 <input
                   type="email"
-                  id="email"
-                  name="email"
                   value={formData.email}
                   disabled
-                  className={`w-full px-4 py-3 border-2 rounded-xl outline-none transition-all cursor-not-allowed ${
-                    isDark 
-                      ? 'bg-slate-900 border-slate-700 text-slate-400' 
-                      : 'bg-slate-100 border-slate-300 text-slate-500'
-                  }`}
+                  className="w-full px-4 py-3 border-2 rounded-xl bg-slate-900/10 cursor-not-allowed"
                 />
 
-                <label htmlFor="le" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
-                  Level
-                </label>
+                <label className="block text-sm font-semibold mb-2 mt-4">Level</label>
                 <input
                   type="text"
-                  id="level"
                   name="level"
                   value={formData.level}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
-                      : 'bg-white border-slate-300 focus:ring-purple-200'
-                  }`}
+                  className="w-full px-4 py-3 border-2 rounded-xl outline-none"
                 />
               </div>
+
               <div className="flex justify-end pt-4">
                 <button
                   onClick={handleSaveProfile}
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold"
                 >
                   <Save size={18} />
                   Salvar Alterações
@@ -200,56 +184,37 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Card: Segurança (Mudar Senha) */}
+          {/* Segurança */}
           <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
             isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
           }`}>
             <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
               <Shield /> Segurança
             </h3>
+
             <div className="space-y-4">
-               <div>
-                <label htmlFor="currentPassword" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
-                  Senha Atual
-                </label>
-                <input
-                  type="password"
-                  id="currentPassword"
-                  placeholder="••••••••"
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
-                      : 'bg-white border-slate-300 focus:ring-purple-200'
-                  }`}
-                />
-              </div>
               <div>
-                <label htmlFor="newPassword" className={`block text-sm font-semibold mb-2 ${
-                  isDark ? 'text-slate-400' : 'text-slate-700'
-                }`}>
-                  Nova Senha
-                </label>
+                <label className="block text-sm font-semibold mb-2">Senha Atual</label>
                 <input
                   type="password"
-                  id="newPassword"
                   placeholder="••••••••"
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:ring-4 outline-none transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 border-slate-600 focus:ring-purple-900/50' 
-                      : 'bg-white border-slate-300 focus:ring-purple-200'
-                  }`}
+                  className="w-full px-4 py-3 border-2 rounded-xl outline-none"
                 />
               </div>
-               <div className="flex justify-end pt-4">
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">Nova Senha</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 border-2 rounded-xl outline-none"
+                />
+              </div>
+
+              <div className="flex justify-end pt-4">
                 <button
                   onClick={handleUpdatePassword}
-                  className={`flex items-center justify-center gap-2 text-sm py-3 px-6 rounded-lg font-semibold transition-all ${
-                    isDark 
-                      ? 'bg-slate-700 hover:bg-slate-600' 
-                      : 'bg-slate-200 hover:bg-slate-300 text-slate-900'
-                  }`}
+                  className="flex items-center justify-center gap-2 bg-slate-700 text-white py-3 px-6 rounded-lg font-semibold"
                 >
                   <KeySquare size={18} />
                   Atualizar Senha
@@ -258,19 +223,25 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Card: Zona de Perigo */}
-          <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
+          {/* Zona de Perigo */}
+          <div className={`p-6 rounded-lg shadow-lg border ${
             isDark ? 'bg-slate-900/50 border-red-900/50' : 'bg-red-50 border-red-200'
           }`}>
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-3 text-red-400">
               Zona de Perigo
             </h3>
-            <p className={`text-sm mb-4 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+
+            <p className="text-sm mb-4">
               Esta ação é irreversível. Todos os seus dados, partidas e análises serão permanentemente excluídos.
             </p>
-            <button className="bg-red-700 hover:bg-red-600 text-white py-3 px-6 rounded-lg font-semibold transition-all flex items-center gap-2">
-              <Trash2 size={18} onClick={handleDeleteAccount} />
-              Deletar Minha Conta
+
+            <button
+              onClick={handleDelete}
+              disabled={loading}
+              className="bg-red-700 hover:bg-red-600 disabled:bg-red-900 disabled:cursor-not-allowed text-white py-3 px-6 rounded-lg font-semibold flex items-center gap-2"
+            >
+              <Trash2 size={18} />
+              {loading ? "Deletando..." : "Deletar Minha Conta"}
             </button>
           </div>
 
