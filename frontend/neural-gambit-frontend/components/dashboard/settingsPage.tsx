@@ -94,51 +94,6 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
       </h1>
 
       <div className="max-w-3xl mx-auto space-y-8">
-        {/* Aparência */}
-        {/* <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
-          isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
-        }`}>
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
-            <Palette /> Aparência
-          </h3>
-          <div className="space-y-4">
-            <SettingsSelect
-              label="Cor do Tabuleiro"
-              icon={Palette}
-              value={boardColor}
-              onChange={(e) => setBoardColor(e.target.value)}
-              isDark={isDark}
-            >
-              <option value="brown">Padrão (Marrom)</option>
-              <option value="green">Verde</option>
-              <option value="blue">Azul</option>
-              <option value="grey">Cinza</option>
-            </SettingsSelect>
-          </div>
-        </div> */}
-
-        {/* Preferências */}
-        {/* <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
-          isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
-        }`}>
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
-            <Languages /> Preferências
-          </h3>
-          <div className="space-y-4">
-            <SettingsSelect
-              label="Idioma"
-              icon={Languages}
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              isDark={isDark}
-            >
-              <option value="pt-br">Português (Brasil)</option>
-              <option value="en">English</option>
-              <option value="es">Español</option>
-            </SettingsSelect>
-          </div>
-        </div> */}
-
         {/* Notificações */}
         <div className={`p-6 rounded-lg shadow-lg border transition-colors duration-300 ${
           isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
@@ -154,13 +109,6 @@ export default function SettingsPage({ isDark = true }: { isDark?: boolean }) {
               onToggle={() => setEmailNotifications(!emailNotifications)}
               isDark={isDark}
             />
-            {/* <SettingsToggle
-              label="Análises no E-mail"
-              icon={Info}
-              enabled={false}
-              onToggle={() => {}}
-              isDark={isDark}
-            /> */}
           </div>
         </div>
 

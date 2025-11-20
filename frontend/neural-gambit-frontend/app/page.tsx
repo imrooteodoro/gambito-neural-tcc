@@ -56,7 +56,7 @@ export default function HomePage() {
         <div className="flex items-center gap-4">
           <button className={`text-sm font-medium ${
             isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-          } transition-all px-4 py-2 rounded-lg`}
+          } transition-all px-4 py-2 rounded-lg`} 
           onClick={() => window.location.href = '/login'}>
             Fazer Login
           </button>
