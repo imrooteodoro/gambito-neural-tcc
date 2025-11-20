@@ -172,3 +172,12 @@ class AuthService:
     def delete_account(self, user_id: int) -> bool:
         return self.user_repository.delete_user(user_id)
 
+    def change_password(self, user_id: int, new_password: str) -> bool:
+        user = self.user_repository.get_user_by_id(user_id)
+        if not user:
+            return False
+
+        user.password = self.hash_password(new_password)
+        self.user_repository.update_user(user)
+        return True
+
