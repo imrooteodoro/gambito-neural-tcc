@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 from src.db.db_connection import Base, engine
 
@@ -15,6 +15,10 @@ class Users(Base):
     activation_token = Column(String, nullable=True)
     activation_expires_at = Column(DateTime, nullable=True)
 
+    # timestamps
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
     studies = relationship("Studies", back_populates="user", cascade="all, delete-orphan")
     games = relationship("GameHistory", back_populates="user", cascade="all, delete-orphan")
     preferences = relationship("Preferences", back_populates="user", cascade="all, delete-orphan")
@@ -27,6 +31,9 @@ class Studies(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"))
     study_data = Column(String, nullable=False)
 
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
     user = relationship("Users", back_populates="studies")
 
 
@@ -36,6 +43,8 @@ class GameHistory(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"))
     game_pgn = Column(String, nullable=False)
 
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
 
     user = relationship("Users", back_populates="games")
 
@@ -46,6 +55,9 @@ class Preferences(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"))
     preference_data = Column(String, nullable=False)
 
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
     user = relationship("Users", back_populates="preferences")
 
 
@@ -54,6 +66,9 @@ class Statistics(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"))
     statistics_data = Column(String, nullable=False)
+
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
 
     user = relationship("Users", back_populates="statistics")
 
