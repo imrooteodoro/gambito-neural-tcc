@@ -7,7 +7,7 @@ export async function GET() {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
-    // console.log("TOKEN DO COOKIE:", token);
+    console.log("TOKEN DO COOKIE:", token);
 
     if (!token) {
       return NextResponse.json(
