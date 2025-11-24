@@ -17,7 +17,7 @@ class ChessEngineLogic:
         info = self.engine.analyse(board, chess.engine.Limit(time=time_limit))
         # print(info)
         print(info['pv'][0:3])
-        return info['score']
+        return info['pv'][0].uci()
 
     def chess_pgn(self, moves: list) -> str:
         board = chess.Board()
