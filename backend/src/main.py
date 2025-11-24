@@ -3,6 +3,8 @@ from src.routes.genai_routes import router as genai_router
 from src.routes.send_moves import router as send_moves_router
 from src.routes.user_routes import router as user_router
 from src.routes.account import router as account_routes
+from src.routes.games_routes import router as games_router
+from src.routes.studies_routes import studies_router
 from src.routes.me import router as me_router
 from src.core.chess_engine import ChessEngineLogic
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,3 +44,5 @@ app.include_router(send_moves_router, prefix="/moves", tags=["Moves"])
 app.include_router(user_router, prefix="/api", tags=["Users"])
 app.include_router(account_routes, prefix="/signup", tags=["Signup"])
 app.include_router(me_router, prefix="/auth", tags=["Auth"])
+app.include_router(games_router, prefix="/games", tags=["Games"])
+app.include_router(studies_router, prefix="/studies", tags=["Studies"])
