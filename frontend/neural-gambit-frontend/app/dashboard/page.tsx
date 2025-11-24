@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import {
   Menu,
   LayoutDashboard,
@@ -25,7 +25,30 @@ export default function DashboardPage() {
   const [theme, setTheme] = useState('dark');
   const [mounted, setMounted] = useState(false);
 
+  const [formData, setFormData] = useState({
+      fullName: 'Carregando ...',
+      username: "Carregando ...",
+      email: 'Carregando ...',
+      level:  'Carregando ...',
+    });
+
   useEffect(() => {
+    async function loadUserInfo(){
+      try{
+        const res = await fetch('/api/user');
+        const data = await res.json();
+        setFormData({
+          fullName: data.full_name ?? 'Carregando ...',
+          username: data.username ?? 'Carregando ...',
+          email: data.email ?? 'Carregando ...',
+          level: data.level ?? 'Carregando ...',
+        });
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    loadUserInfo();
     setMounted(true);
   }, []);
 
@@ -183,8 +206,8 @@ export default function DashboardPage() {
               </div>
               {sidebarOpen && (
                 <div className="overflow-hidden">
-                  <p className="text-sm font-medium truncate">Seu Nome</p>
-                  <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'} truncate`}>seu@email.com</p>
+                  <p className="text-sm font-medium truncate">{formData.fullName}</p>
+                  <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'} truncate`}>{formData.email}</p>
                 </div>
               )}
             </div>
