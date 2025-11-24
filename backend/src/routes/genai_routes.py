@@ -1,12 +1,18 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from fastapi.responses import StreamingResponse
 from src.controllers.genai_controller import GenAIController
 from src.schemas.user_message_schema import UserMessageSchema
+from src.services.auth import AuthService
+from src.models.User import Users
+from src.repositories.user_repository import UserRepository
+from src.db.db_connection import SessionLocal
+
+auth_service = AuthService(UserRepository(SessionLocal()))
 
 router = APIRouter()
 
 @router.post("/analyze", status_code=status.HTTP_200_OK)
-async def analyze_position(prompt: UserMessageSchema):
+async def analyze_position(prompt: UserMessageSchema, current_user: Users = Depends(auth_service.get_current_user)) -> StreamingResponse:
     controller = GenAIController()
 
     async def event_stream():
