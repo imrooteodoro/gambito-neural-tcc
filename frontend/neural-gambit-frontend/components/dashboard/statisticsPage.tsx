@@ -235,7 +235,8 @@ export default function StatisticsPage({ isDark = true }: { isDark?: boolean }):
                   cy="50%" 
                   outerRadius={100} 
                   fill="#8884d8" 
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  // CORREÇÃO: Usando (percent || 0) para evitar undefined
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 >
                   {stats.openingsData.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
