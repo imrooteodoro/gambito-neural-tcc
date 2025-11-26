@@ -106,13 +106,13 @@ export default function LoginPage() {
           <div className='text-center'><span className="text-red-500 mb-4">{messageError}</span></div>
 
           {/* Forgot Password Link (Novo) */}
-          <div className="flex justify-end text-xs text-gray-500 mb-6 mt-3">
+          {/* <div className="flex justify-end text-xs text-gray-500 mb-6 mt-3">
             <Link href="/forgot-password">
               <span className="text-purple-600 hover:underline cursor-pointer">
                 Esqueceu sua senha?
               </span>
             </Link>
-          </div>
+          </div> */}
 
 
           {/* Submit Button (Texto alterado) */}
