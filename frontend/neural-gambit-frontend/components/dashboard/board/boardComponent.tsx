@@ -225,7 +225,11 @@ export default function ChessBoard({ isDark }: { isDark: boolean }) {
   function changePlayerColor(color: string) { setPlayerColor(color); setBoardOrientation(color === 'w' ? 'white' : 'black'); resetGame(); }
 
   function renderBoard() {
-    const squares: JSX.Element[] = []; const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+    // CORREÇÃO: Usando React.ReactNode[] em vez de JSX.Element[]
+    const squares: React.ReactNode[] = []; 
+    const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; 
+    const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+    
     if (boardOrientation === 'black') { files.reverse(); ranks.reverse(); }
     ranks.forEach((rank, rankIndex) => {
       files.forEach((file, fileIndex) => {
