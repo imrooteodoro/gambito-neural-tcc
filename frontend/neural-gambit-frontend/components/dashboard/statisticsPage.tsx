@@ -5,7 +5,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { Trophy, Zap, CheckCircle, Loader2, Brain } from 'lucide-react'; // Importei o Brain opcionalmente para tema de IA
+import { Trophy, Zap, CheckCircle, Loader2, Brain } from 'lucide-react';
 
 const COLORS = ['#8884d8', '#82ca9d', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
 
@@ -20,7 +20,8 @@ interface DashboardStats {
   openingsData: any[];
 }
 
-export default function StatisticsPage({ isDark = true }: { isDark?: boolean }) {
+// Adicionei ": React.ReactNode" para evitar o erro "Cannot find namespace JSX"
+export default function StatisticsPage({ isDark = true }: { isDark?: boolean }): React.ReactNode {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
