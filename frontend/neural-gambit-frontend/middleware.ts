@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
 
-  const token = request.cookies.get('access_token')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('access_token')?.value;
 
   const signInURL = new URL('/', request.url);
   const dashboardURL = new URL('/dashboard', request.url);
