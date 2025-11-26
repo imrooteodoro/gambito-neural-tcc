@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess } from "chess.js";
 // Importação da engine de xadrez
+// @ts-ignore
 import { aiMove } from 'js-chess-engine'; 
 import {
   RotateCcw, Cpu, Users, Palette, Send, MessageSquare, Lightbulb, X,
@@ -8,35 +9,36 @@ import {
 } from 'lucide-react';
 import Chatbot from '../chatSidebar';
 
-export default function ChessBoard({ isDark }) {
+export default function ChessBoard({ isDark }: { isDark: boolean }) {
   const [game, setGame] = useState(new Chess());
-  const [selectedSquare, setSelectedSquare] = useState(null);
-  const [validMoves, setValidMoves] = useState([]);
+  const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
+  const [validMoves, setValidMoves] = useState<string[]>([]);
   const [level, setLevel] = useState(3); // Nível visual (1-10)
   const [gameMode, setGameMode] = useState('vsAI');
   const [playerColor, setPlayerColor] = useState('w');
   const [gameStatus, setGameStatus] = useState('');
   const [boardOrientation, setBoardOrientation] = useState('white');
-  const [moveHistory, setMoveHistory] = useState([]); 
+  const [moveHistory, setMoveHistory] = useState<string[]>([]); 
   const [currentMoveIndex, setCurrentMoveIndex] = useState(-1); 
-  const [lastMove, setLastMove] = useState(null);
+  const [lastMove, setLastMove] = useState<{from: string, to: string} | null>(null);
   const [pieceTheme, setPieceTheme] = useState('classic');
   const [boardTheme, setBoardTheme] = useState('wooden');
   const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
   const pgnSavedRef = useRef(false);
   const [isSavingPGN, setIsSavingPGN] = useState(false);
-  const [insights, setInsights] = useState([]);
+  const [insights, setInsights] = useState<any[]>([]);
   const [isLoadingInsight, setIsLoadingInsight] = useState(false);
   const [showInsightModal, setShowInsightModal] = useState(false);
 
-  const pieceThemes = {
+  // Definindo tipos para os temas para evitar erros de indexação
+  const pieceThemes: any = {
     classic: { name: 'Clássico', pieces: { 'wp': '/pieces/pawn-w.svg', 'wn': '/pieces/knight-w.svg', 'wb': '/pieces/bishop-w.svg', 'wr': '/pieces/rook-w.svg', 'wq': '/pieces/queen-w.svg', 'wk': '/pieces/king-w.svg', 'bp': '/pieces/pawn-b.svg', 'bn': '/pieces/knight-b.svg', 'bb': '/pieces/bishop-b.svg', 'br': '/pieces/rook-b.svg', 'bq': '/pieces/queen-b.svg', 'bk': '/pieces/king-b.svg' } }
   };
 
-  const boardThemes = {
+  const boardThemes: any = {
     wooden: { name: 'Madeira', light: 'bg-amber-200', dark: 'bg-amber-700', border: 'border-amber-900' },
     marble: { name: 'Mármore', light: 'bg-slate-100', dark: 'bg-slate-600', border: 'border-slate-800' },
     ocean: { name: 'Oceano', light: 'bg-cyan-200', dark: 'bg-cyan-700', border: 'border-cyan-900' },
@@ -48,7 +50,7 @@ export default function ChessBoard({ isDark }) {
   const pieceSymbols = pieceThemes[pieceTheme].pieces; 
   const currentBoardTheme = boardThemes[boardTheme];
 
-  function navigateHistory(direction) {
+  function navigateHistory(direction: string) {
     let newIndex = currentMoveIndex;
     if (direction === 'start') newIndex = -1;
     else if (direction === 'prev') newIndex = Math.max(-1, currentMoveIndex - 1);
@@ -61,22 +63,27 @@ export default function ChessBoard({ isDark }) {
       for (let i = 0; i <= newIndex; i++) tempGame.move(moveHistory[i]);
       setGame(tempGame);
       if (newIndex >= 0) {
-        const lastMoved = tempGame.history({ verbose: true }).pop();
-        setLastMove({ from: lastMoved.from, to: lastMoved.to });
+        // @ts-ignore - history com verbose pode retornar array
+        const history = tempGame.history({ verbose: true });
+        const lastMoved = history.pop();
+        if (lastMoved) setLastMove({ from: lastMoved.from, to: lastMoved.to });
       } else {
         setLastMove(null);
       }
     }
   }
 
-  async function fetchSendMoves(moves) {
+  async function fetchSendMoves(moves: string[]) {
     setIsLoadingInsight(true);
     try {
       const response = await fetch('/api/chat/moves', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ moves, board_pgn: game.pgn() }) });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.body) throw new Error("No response body");
+      
       const reader = response.body.getReader(); const decoder = new TextDecoder(); let insightContent = '';
       const newInsightIndex = insights.length;
       setInsights(prev => [...prev, { moves: moves.slice(-1)[0], content: '', timestamp: new Date() }]);
+      
       while (true) {
         const { done, value } = await reader.read(); if (done) break;
         const chunk = decoder.decode(value, { stream: true });
@@ -91,7 +98,8 @@ export default function ChessBoard({ isDark }) {
   const handleManualAnalysis = () => {
     if (game.isCheckmate()) return;
     setShowInsightModal(true);
-    const uciMoves = game.history({ verbose: true }).map(m => m.from + m.to);
+    // @ts-ignore
+    const uciMoves = game.history({ verbose: true }).map((m: any) => m.from + m.to);
     fetchSendMoves(uciMoves);
   };
 
@@ -107,7 +115,7 @@ export default function ChessBoard({ isDark }) {
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatMessages]);
 
-  async function savePGNToBackend(pgn) {
+  async function savePGNToBackend(pgn: string) {
     if (!pgn || pgnSavedRef.current) return; setIsSavingPGN(true);
     try {
       const res = await fetch('/api/studies/insert', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ game_pgn: pgn }) });
@@ -120,10 +128,10 @@ export default function ChessBoard({ isDark }) {
     else if (game.isDraw()) setGameStatus('Empate! 🤝'); else if (game.isCheck()) setGameStatus('Xeque! ⚠️');
     else { const turn = game.turn() === 'w' ? 'Brancas' : 'Pretas'; setGameStatus(gameMode === 'vsAI' && game.turn() !== playerColor ? 'IA pensando... 🤖' : `Vez das ${turn} ♟️`); }
   }
-  
+   
   function isGameFinished() { return game.isGameOver() || game.isDraw() || game.isCheckmate() || game.isStalemate() || game.isThreefoldRepetition(); }
 
-  function onSquareClick(square) {
+  function onSquareClick(square: string) {
     if (currentMoveIndex !== moveHistory.length - 1) return;
     if (isGameFinished() || (gameMode === 'vsAI' && game.turn() !== playerColor)) return;
     if (selectedSquare === square) { setSelectedSquare(null); setValidMoves([]); return; }
@@ -132,12 +140,18 @@ export default function ChessBoard({ isDark }) {
     setSelectedSquare(null); setValidMoves([]);
     
     if (!moveResult) {
+      // @ts-ignore
       const piece = game.get(square);
-      if (piece && piece.color === game.turn()) { setSelectedSquare(square); setValidMoves(game.moves({ square: square, verbose: true }).map(m => m.to)); }
+      if (piece && piece.color === game.turn()) { 
+          setSelectedSquare(square); 
+          // @ts-ignore
+          setValidMoves(game.moves({ square: square, verbose: true }).map((m: any) => m.to)); 
+      }
     }
   }
 
-  function makeMove(from, to) {
+  function makeMove(from: string | null, to: string) {
+    if (!from) return false;
     try {
       const move = game.move({ from, to, promotion: 'q' });
       if (move) {
@@ -207,15 +221,17 @@ export default function ChessBoard({ isDark }) {
     setLastMove(null); pgnSavedRef.current = false; setInsights([]); setShowInsightModal(false);
   }
 
-  function changeGameMode(mode) { setGameMode(mode); resetGame(); }
-  function changePlayerColor(color) { setPlayerColor(color); setBoardOrientation(color === 'w' ? 'white' : 'black'); resetGame(); }
+  function changeGameMode(mode: string) { setGameMode(mode); resetGame(); }
+  function changePlayerColor(color: string) { setPlayerColor(color); setBoardOrientation(color === 'w' ? 'white' : 'black'); resetGame(); }
 
   function renderBoard() {
-    const squares = []; const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+    const squares: JSX.Element[] = []; const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
     if (boardOrientation === 'black') { files.reverse(); ranks.reverse(); }
     ranks.forEach((rank, rankIndex) => {
       files.forEach((file, fileIndex) => {
-        const square = file + rank; const piece = game.get(square);
+        const square = file + rank; 
+        // @ts-ignore
+        const piece = game.get(square);
         const fileNum = file.charCodeAt(0) - 'a'.charCodeAt(0); const rankNum = parseInt(rank);
         const isLight = (fileNum + rankNum) % 2 !== 0; const isSelected = selectedSquare === square;
         const isValidMove = validMoves.includes(square); const isLastMove = lastMove && (lastMove.from === square || lastMove.to === square);
@@ -257,8 +273,8 @@ export default function ChessBoard({ isDark }) {
                   <div className="flex flex-col items-center justify-center h-32 text-purple-500"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-current mb-2"></div><span>Analisando tabuleiro...</span></div>
                 ) : (
                   <div className="prose dark:prose-invert max-w-none">
-                     {insights.length > 0 ? insights[insights.length - 1].content : "Clique na lâmpada para gerar uma análise."}
-                     {isLoadingInsight && <span className="inline-block w-2 h-4 ml-1 bg-purple-500 animate-pulse"/>}
+                      {insights.length > 0 ? insights[insights.length - 1].content : "Clique na lâmpada para gerar uma análise."}
+                      {isLoadingInsight && <span className="inline-block w-2 h-4 ml-1 bg-purple-500 animate-pulse"/>}
                   </div>
                 )}
               </div>
@@ -273,8 +289,8 @@ export default function ChessBoard({ isDark }) {
           </button>
           {showThemeSelector && (
             <div className="space-y-4">
-              <div><label className="text-sm font-semibold mb-2 block">Estilo de Peças</label><div className="grid grid-cols-1 gap-2">{Object.entries(pieceThemes).map(([key, theme]) => (<button key={key} onClick={() => setPieceTheme(key)} className={`p-2 rounded-lg text-left transition-all ${pieceTheme === key ? 'bg-purple-600 text-white' : isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-100 hover:bg-slate-200'}`}>{theme.name}</button>))}</div></div>
-              <div><label className="text-sm font-semibold mb-2 block">Estilo do Tabuleiro</label><div className="grid grid-cols-2 gap-2">{Object.entries(boardThemes).map(([key, theme]) => (<button key={key} onClick={() => setBoardTheme(key)} className={`p-3 rounded-lg transition-all ${boardTheme === key ? 'ring-2 ring-purple-600' : ''}`}><div className="flex gap-1 mb-1"><div className={`w-6 h-6 ${theme.light} rounded`}></div><div className={`w-6 h-6 ${theme.dark} rounded`}></div></div><span className="text-xs">{theme.name}</span></button>))}</div></div>
+              <div><label className="text-sm font-semibold mb-2 block">Estilo de Peças</label><div className="grid grid-cols-1 gap-2">{Object.entries(pieceThemes).map(([key, theme]: [string, any]) => (<button key={key} onClick={() => setPieceTheme(key)} className={`p-2 rounded-lg text-left transition-all ${pieceTheme === key ? 'bg-purple-600 text-white' : isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-100 hover:bg-slate-200'}`}>{theme.name}</button>))}</div></div>
+              <div><label className="text-sm font-semibold mb-2 block">Estilo do Tabuleiro</label><div className="grid grid-cols-2 gap-2">{Object.entries(boardThemes).map(([key, theme]: [string, any]) => (<button key={key} onClick={() => setBoardTheme(key)} className={`p-3 rounded-lg transition-all ${boardTheme === key ? 'ring-2 ring-purple-600' : ''}`}><div className="flex gap-1 mb-1"><div className={`w-6 h-6 ${theme.light} rounded`}></div><div className={`w-6 h-6 ${theme.dark} rounded`}></div></div><span className="text-xs">{theme.name}</span></button>))}</div></div>
             </div>
           )}
         </div>
