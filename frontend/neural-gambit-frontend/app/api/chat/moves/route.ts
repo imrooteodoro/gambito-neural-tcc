@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     if (!response.ok) {
         throw new Error("Failed to send moves");
     }
+    
     return new Response(response.body, {
       headers: {
         'Content-Type': 'text/event-stream',
@@ -30,7 +31,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error:", error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), {
+    const errorMessage = (error as Error).message || "Unknown error";
+    
+    return new Response(JSON.stringify({ success: false, error: errorMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
