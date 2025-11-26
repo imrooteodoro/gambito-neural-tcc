@@ -14,7 +14,9 @@ export default function SignupPage() {
     level: '',
     terms: false
   });
-  const handleChange = (e: { target: { name: any; value: any; type: any; checked: any; }; }) => {
+
+  // CORREÇÃO: Usando React.ChangeEvent<any> para aceitar tanto Input quanto Select
+  const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
