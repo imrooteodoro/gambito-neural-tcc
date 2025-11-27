@@ -14,7 +14,8 @@ load_dotenv()
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
 ACTIVATION_TOKEN_EXPIRE_HOURS = int(os.getenv("ACTIVATION_EXPIRE_HOURS", "48"))
 RESET_TOKEN_EXPIRE_MINUTES = int(os.getenv("RESET_EXPIRE_MINUTES", "15"))
 
@@ -66,12 +67,60 @@ class AuthService:
     def create_reset_token(self) -> str:
         return secrets.token_urlsafe(32)
 
-    def send_email(self, to_email: str, subject: str, body: str):
-        msg = MIMEMultipart()
-        msg["From"] = SMTP_USER
+    def _get_html_template(self, title: str, message: str, button_text: str, link: str) -> str:
+        """Gera um template de e-mail estilizado com o tema Neural Gambit."""
+        return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; margin: 0; padding: 0; }}
+                .container {{ max-width: 600px; margin: 0 auto; background-color: #1e293b; border-radius: 8px; overflow: hidden; margin-top: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }}
+                .header {{ background-color: #1e293b; padding: 30px; text-align: center; border-bottom: 1px solid #334155; }}
+                .logo-text {{ color: #a855f7; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 1px; }}
+                .icon {{ font-size: 24px; margin-right: 8px; }}
+                .content {{ padding: 40px 30px; color: #e2e8f0; line-height: 1.6; font-size: 16px; text-align: center; }}
+                .h1-title {{ color: #f8fafc; margin-top: 0; font-size: 22px; }}
+                .btn {{ display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; transition: background-color 0.3s; }}
+                .footer {{ background-color: #0f172a; padding: 20px; text-align: center; color: #64748b; font-size: 12px; }}
+                .link-alt {{ color: #94a3b8; word-break: break-all; font-size: 12px; margin-top: 20px; display: block; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <span class="logo-text">♟️ Neural Gambit</span>
+                </div>
+                <div class="content">
+                    <h1 class="h1-title">{title}</h1>
+                    <p>{message}</p>
+                    <a href="{link}" class="btn" style="color: #ffffff;">{button_text}</a>
+                    
+                    <br><br>
+                    <p style="font-size: 14px; color: #94a3b8;">Ou cole este link no seu navegador:</p>
+                    <a href="{link}" class="link-alt">{link}</a>
+                </div>
+                <div class="footer">
+                    &copy; {datetime.datetime.now().year} Neural Gambit AI. Todos os direitos reservados.
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+    def send_email(self, to_email: str, subject: str, text_body: str, html_body: str = None):
+        msg = MIMEMultipart("alternative")
+        msg["From"] = f"Neural Gambit <{SMTP_USER}>"
         msg["To"] = to_email
         msg["Subject"] = subject
-        msg.attach(MIMEText(body, "plain"))
+
+        # Anexa versão texto puro (fallback)
+        msg.attach(MIMEText(text_body, "plain"))
+        
+        # Anexa versão HTML (se fornecida)
+        if html_body:
+            msg.attach(MIMEText(html_body, "html"))
 
         try:
             with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
@@ -83,19 +132,39 @@ class AuthService:
 
     def send_activation_email(self, user_email: str, activation_token: str):
         activation_link = f"{os.getenv('ACTIVATION_LINK')}?token={activation_token}"
-        body = (
-            f"Olá,\n\nClique no link para ativar sua conta: {activation_link}"
-            f"\n\nEsse link expira em {ACTIVATION_TOKEN_EXPIRE_HOURS} horas."
+        
+        text_body = (
+            f"Bem-vindo ao Neural Gambit ♞!\n\n"
+            f"Clique no link para ativar sua conta: {activation_link}\n\n"
+            f"Este link expira em {ACTIVATION_TOKEN_EXPIRE_HOURS} horas."
         )
-        self.send_email(user_email, "Ative sua conta", body)
+
+        html_body = self._get_html_template(
+            title="Ative sua conta",
+            message=f"Bem-vindo ao Neural Gambit ! Estamos felizes em tê-lo conosco. Para começar a usar nossa IA de xadrez, por favor confirme seu e-mail.",
+            button_text="Ativar Conta Agora",
+            link=activation_link
+        )
+
+        self.send_email(user_email, "Bem-vindo ao Neural Gambit", text_body, html_body)
 
     def send_reset_password_email(self, user_email: str, reset_token: str):
         reset_link = f"{os.getenv('RESET_LINK')}?token={reset_token}"
-        body = (
-            f"Olá,\n\nUse este link para redefinir sua senha: {reset_link}"
-            f"\n\nEsse link expira em {RESET_TOKEN_EXPIRE_MINUTES} minutos."
+        
+        text_body = (
+            f"Recuperação de Senha - Neural Gambit\n\n"
+            f"Use este link para redefinir sua senha: {reset_link}\n\n"
+            f"Este link expira em {RESET_TOKEN_EXPIRE_MINUTES} minutos."
         )
-        self.send_email(user_email, "Redefinir senha", body)
+
+        html_body = self._get_html_template(
+            title="Redefinição de Senha",
+            message="Recebemos uma solicitação para redefinir a senha da sua conta Neural Gambit. Se não foi você, ignore este e-mail.",
+            button_text="Redefinir Minha Senha",
+            link=reset_link
+        )
+
+        self.send_email(user_email, "Redefinir senha - Neural Gambit", text_body, html_body)
 
 
     def activate_user_account(self, token: str) -> bool:
@@ -180,4 +249,3 @@ class AuthService:
         user.password = self.hash_password(new_password)
         self.user_repository.update_user(user)
         return True
-

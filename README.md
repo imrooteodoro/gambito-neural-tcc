@@ -21,3 +21,8 @@ bash
     DB_PORT=""
     DB_NAME=""
 ```
+
+
+# SMTP config:
+
+[config google smtp](https://myaccount.google.com/apppasswords)

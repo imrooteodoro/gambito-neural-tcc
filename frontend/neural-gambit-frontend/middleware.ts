@@ -6,7 +6,8 @@ export async function middleware(request: NextRequest) {
 
   const cookieStore = await cookies();
   const token = cookieStore.get('auth_token')?.value;
-  
+
+
   const signInURL = new URL('/', request.url);
   const dashboardURL = new URL('/dashboard', request.url);
 

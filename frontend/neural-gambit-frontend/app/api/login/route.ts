@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const result = await response.json();
 
     const token = result.access_token;
-    console.log("Token recebido do backend:", token);
+    // console.log("Token recebido do backend:", token);
     const tokenType = result.token_type;
 
     if (!token) {

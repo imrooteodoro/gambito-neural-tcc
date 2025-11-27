@@ -1,9 +1,9 @@
 .PHONY: run docker-build docker-up docker-down docker-run test
 
-IMAGE_NAME = gambito-neural-tcc-backend
+IMAGE_NAME = imrooteodoro/gambito-neural-tcc-backend
 
 run:
-	@uv run fastapi dev backend/src/main.py --reload
+	@uv run fastapi dev --port 8000 --host 0.0.0.0 backend/src/main.py --reload
 docker-build:
 	docker build -t $(IMAGE_NAME) .
 docker-run:

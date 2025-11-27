@@ -194,13 +194,13 @@ export default function ProfilePage({ isDark = true }: { isDark?: boolean }) {
                 />
               </div>
 
-              <button
+              {/* <button
                 onClick={handleSaveProfile}
                 className="mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold flex items-center gap-2"
               >
                 <Save size={18} />
                 Salvar Alterações
-              </button>
+              </button> */}
             </div>
 
             {/* Zona de Perigo */}
