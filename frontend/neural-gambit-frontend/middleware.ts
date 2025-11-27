@@ -5,8 +5,8 @@ import { cookies } from 'next/headers';
 export async function middleware(request: NextRequest) {
 
   const cookieStore = await cookies();
-  const token = cookieStore.get('access_token')?.value;
-
+  const token = cookieStore.get('auth_token')?.value;
+  
   const signInURL = new URL('/', request.url);
   const dashboardURL = new URL('/dashboard', request.url);
 
@@ -26,7 +26,6 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// 4. Configuração do Matcher: Onde o middleware vai rodar
 export const config = {
   matcher: [
     /*
