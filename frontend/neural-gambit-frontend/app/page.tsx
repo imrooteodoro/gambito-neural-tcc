@@ -119,13 +119,13 @@ export default function HomePage() {
               Começar Agora
             </button>
             
-            <button className={`w-full sm:w-auto py-4 px-8 rounded-xl font-semibold text-base backdrop-blur-sm transition-all duration-500 ${
+            {/* <button className={`w-full sm:w-auto py-4 px-8 rounded-xl font-semibold text-base backdrop-blur-sm transition-all duration-500 ${
               isDark
                 ? 'bg-slate-700 bg-opacity-50 text-white border border-slate-600 hover:bg-slate-600'
                 : 'bg-white bg-opacity-70 text-slate-900 border border-slate-300 hover:bg-slate-100'
             }`}>
               Saber Mais
-            </button>
+            </button> */}
           </div>
         </div>
       </main>
