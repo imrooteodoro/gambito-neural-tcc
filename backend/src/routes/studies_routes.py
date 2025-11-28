@@ -84,7 +84,7 @@ async def get_dashboard_statistics(
     Retorna JSON formatado para Recharts.
     """
     try:
-        chart_data = chart_service.generate_chart_data(current_user.id)
+        chart_data = await chart_service.generate_chart_data(current_user.id)
         return chart_data
     except Exception as e:
         print(f"Error generating dashboard: {e}")

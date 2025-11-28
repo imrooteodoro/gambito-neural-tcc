@@ -11,13 +11,12 @@ class ChartService:
         self.llm = llm
         self.parser = PydanticOutputParser(pydantic_object=DashboardData)
 
-    def generate_chart_data(self, user_id: int) -> dict:
+    async def generate_chart_data(self, user_id: int) -> dict:
         studies = self.data_service.get_studies_by_user(user_id)
         
         if not studies:
             return self._get_empty_structure()
 
-      
         data_str = "\n".join([
             f"- Data: {s.created_at}, PGN/Dados: {s.study_data}" 
             for s in studies
@@ -27,7 +26,7 @@ class ChartService:
             template="""
             Aja como uma engine de análise de dados para um dashboard de Xadrez.
             Analise os dados brutos de estudos abaixo e gere um JSON estrito.
-            
+
             DADOS DOS ESTUDOS:
             {data}
 
@@ -35,17 +34,19 @@ class ChartService:
             - ratingData: Estime a evolução baseada nos metadados do PGN se houver, ou datas.
             - winRateData: Tente extrair vitórias/derrotas do texto do PGN.
             - openingsData: Identifique aberturas no texto PGN.
-            
+
             {format_instructions}
             """,
             input_variables=["data"],
-            partial_variables={"format_instructions": self.parser.get_format_instructions()}
+            partial_variables={
+                "format_instructions": self.parser.get_format_instructions()
+            }
         )
 
         chain = prompt | self.llm | self.parser
-        
+
         try:
-            result = chain.invoke({"data": data_str})
+            result = await chain.ainvoke({"data": data_str})
             return result.dict()
         except Exception as e:
             print(f"Erro na geração do gráfico: {e}")
