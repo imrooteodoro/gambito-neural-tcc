@@ -33,10 +33,10 @@ REGRAS ESTRITAS DE SAÍDA:
 - Seja telegráfico (ex: em vez de "As brancas possuem a vantagem", use "Vantagem das Brancas").
 
 MODELO DE RESPOSTA OBRIGATÓRIO:
-ABERTURA: [Nome da abertura ou fase do jogo]
-VANTAGEM: [Quem lidera e o motivo em 5 palavras]
-ESTRATÉGIA: [O plano principal em 1 frase]
-CUIDADO: [Ameaça imediata ou erro a evitar]
+ABERTURA: [Nome da abertura ou fase do jogo]\n
+VANTAGEM: [Quem lidera e o motivo em 5 palavras]\n
+ESTRATÉGIA: [O plano principal em 1 frase]\n
+CUIDADO: [Ameaça imediata ou erro a evitar]\n
 SUGESTÃO: [O lance recomendado explicado brevemente]
 """
 

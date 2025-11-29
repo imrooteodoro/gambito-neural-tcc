@@ -59,5 +59,5 @@ class Genai:
             moves=moves, 
             board_pgn=board_pgn
         )
-        response = chess_agent.invoke(prompt)
-        return response.content if hasattr(response, "content") else str(response)
+        response = chess_agent.stream(prompt)
+        return response
